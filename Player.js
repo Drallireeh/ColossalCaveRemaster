@@ -1,5 +1,10 @@
 const dice_module = require("./DiceRoll.js");
 const tools_module = require("./Tools.js");
+const item_module = require("./Items.js")
+
+list_item = item_module.items;
+
+console.log(list_item);
 
 const playable_characters = {
 
@@ -29,22 +34,6 @@ let player_equipment = {
     LeftHand: undefined
 };
 
-let test_object = CreateObject("Excalibur", "RightHand", 30, 50000);
-let test_object_two = CreateObject("Shield", "LeftHand", 15, 50);
-
-let health_potion = CreateUsableObject("HealthPotion", "Usable", 3, 10, () => {
-    let heal_points = 20;
-    if (player_stats.MaxHealth - player_stats.Health > heal_points) {
-        player_stats.Health += heal_points;
-        console.log("Vous regagnez " + heal_points + " HP");
-    }
-    else 
-    {
-        player_stats.Health = player_stats.MaxHealth;
-        console.log("Grâce à la sainte potion, vous êtes de nouveau full life !");
-    }
-})
-
 let enemy = {
     Name: "Françis",
     Armor: 1,
@@ -52,25 +41,6 @@ let enemy = {
     IsNpc: true,
     Item: undefined,
     Health: 85
-}
-
-function CreateObject(name, type, weight, price) {
-    return object = {
-        Name: name,
-        Type: type,
-        Weight: weight,
-        Price: price,
-    }
-}
-
-function CreateUsableObject(name, type, weight, price, effect) {
-    return object = {
-        Name: name,
-        Type: type,
-        Weight: weight,
-        Price: price,
-        Effect: effect
-    }
 }
 
 function Take(object) {
@@ -155,10 +125,6 @@ function Attack(attacker, target, counter_func) {
 }
 
 function Test() {
-    Take(health_potion);
-
-    Use(health_potion);
-
     Attack(player_stats, enemy, () => {
         Attack(enemy, player_stats, () => {
         });
