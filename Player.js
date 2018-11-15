@@ -3,21 +3,20 @@ const tools_module = require("./Tools.js");
 const item_module = require("./Items.js");
 const monster_module = require('./Monsters.js');
 
-const playable_characters = {
+// const playable_characters = {
 
-};
+// };
 
 const player_stats = {
+    IsNpc: false,
     Name: "Bob",
     Strength: 40,
     Armor: 12,
-    IsNpc: false,
     MaxHealth: 100,
     Health: 100,
+    InventoryCapacity: UpdateInventoryCapacity,
+    InventoryWeight: 0
 }
-
-let inventory_capacity = player_stats.Strength * 7.5;
-let player_inventory_weight = 0;
 
 let player_inventory = [];
 let player_equipment = {
@@ -31,10 +30,15 @@ let player_equipment = {
     LeftHand: undefined
 };
 
+function UpdateInventoryCapacity()
+{
+    player_stats.InventoryCapacity = player_stats.Strength * 7.5;
+}
+
 function Take(object) {
-    if (player_inventory_weight + object.Weight <= inventory_capacity) {
+    if (player_stats.InventoryWeight + object.Weight <= player_stats.InventoryCapacity) {
         player_inventory.push(object);
-        player_inventory_weight += object.Weight;
+        player_stats.InventoryWeight += object.Weight;
     }
     else console.log("Action impossible, cet objet est trop lourd");
 }
