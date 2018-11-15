@@ -1,4 +1,5 @@
 const dice_module = require("./DiceRoll.js");
+const tools_module = require("./Tools.js");
 
 const player_stats = {
     Strength: 5,
@@ -40,7 +41,7 @@ let enemy = {
     Strength: 5,
     IsNpc: true,
     Item: undefined,
-    Health: 5
+    Health: 85
 }
 
 function CreateObject(name, type, weight, price) {
@@ -103,54 +104,45 @@ function Unequip(object) {
     else console.log("Tu ne peux pas déséquiper " + object.Name + ", il n'est pas équipé sur toi.");
 }
 
-function Attack(attacker, target) {
-    if (attacker.Health > 0 && target.Health > 0) 
-    {
-        let dice_result = dice_module.DicesRoll(20);
+function Attack(attacker, target, counter = false, counter_func) {
+    let dice_result = dice_module.DicesRoll(20);
 
-        console.log("dice_result : " + dice_result);
+    let attacker_attack = dice_result[0] + attacker.Strength;
+    console.log("Attaquant dégats : " + attacker_attack);
 
-        let attacker_attack = dice_result[0] + attacker.Strength;
-        console.log("Attaquant dégats : " + attacker_attack);
-
-        if (dice_result == 20) {
+    if (dice_result == 20) {
+        target.Health -= attacker_attack;
+    }
+    else if (dice_result == 1) {
+        console.log("Echec critique. Cela n'a aucun effet sur la cible");
+    }
+    else {
+        if (attacker_attack > target.Armor) {
             target.Health -= attacker_attack;
         }
-        else if (dice_result == 1) {
-            console.log("Echec critique. Cela n'a aucun effet sur la cible");
-        }
-        else {
-            if (attacker_attack > target.Armor) {
-                target.Health -= attacker_attack;
-            }
-            else console.log("L'attaque à échouée.")
-        }
-
-        if (target.Health < 0) {
-            if (target.IsNpc === true) console.log("Vous avez tuer " + target.Name + ", en mourrant il a laissé tomber " + target.Item);
-            else {
-                console.log("Game Over. Vous êtes mort.")
-            }
-        }
-
-        console.log("Target health " + target.Health);
+        else console.log("L'attaque à échouée.")
     }
-    else console.log("ntm")
+
+    if (target.Health <= 0) {
+        if (target.IsNpc === true) console.log("Vous avez tuer " + target.Name + ", en mourrant il a laissé tomber " + target.Item);
+        else {
+            console.log("Game Over. Vous êtes mort.")
+        }
+    }
+    else {
+        if (counter === false)
+        {
+            counter_func();
+        }
+    }
+
+    console.log("Target health " + target.Health);
 }
 
 function Test() {
-    Take(test_object);
-    Take(test_object_two);
-
-    Take(test_usable_object);
-
-    Equip(test_object);
-
-    Use(test_usable_object);
-    Use(test_object);
-
-    Attack(player_stats, enemy);
-    Attack(enemy, player_stats);
+    Attack(player_stats, enemy, false, () => {
+        Attack(enemy, player_stats, true);
+    });
 }
 
 Test();
