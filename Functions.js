@@ -1,11 +1,17 @@
 const dice_module = require("./DiceRoll.js");
 const tools_module = require("./Tools.js");
 
+const playable_characters = {
+
+};
+
 const player_stats = {
-    Strength: 5,
+    Name: "Player",
+    Strength: 10,
     Armor: 12,
     IsNpc: false,
-    Health: 100
+    MaxHealth: 100,
+    Health: 100,
 }
 
 let inventory_capacity = player_stats.Strength * 7.5;
@@ -26,17 +32,21 @@ let player_equipment = {
 let test_object = CreateObject("Excalibur", "RightHand", 30, 50000);
 let test_object_two = CreateObject("Shield", "LeftHand", 15, 50);
 
-let test_usable_object = {
-    Name: "Potion",
-    Type: "Usable",
-    Weight: 2,
-    Effect: function () {
-        console.log("Rend des hps tmtc");
-    },
-    price: 10
-}
+let health_potion = CreateUsableObject("HealthPotion", "Usable", 3, 10, () => {
+    let heal_points = 20;
+    if (player_stats.MaxHealth - player_stats.Health > heal_points) {
+        player_stats.Health += heal_points;
+        console.log("Vous regagnez " + heal_points + " HP");
+    }
+    else 
+    {
+        player_stats.Health = player_stats.MaxHealth;
+        console.log("Grâce à la sainte potion, vous êtes de nouveau full life !");
+    }
+})
 
 let enemy = {
+    Name: "Françis",
     Armor: 1,
     Strength: 5,
     IsNpc: true,
@@ -49,7 +59,17 @@ function CreateObject(name, type, weight, price) {
         Name: name,
         Type: type,
         Weight: weight,
-        Price: price
+        Price: price,
+    }
+}
+
+function CreateUsableObject(name, type, weight, price, effect) {
+    return object = {
+        Name: name,
+        Type: type,
+        Weight: weight,
+        Price: price,
+        Effect: effect
     }
 }
 
@@ -104,44 +124,48 @@ function Unequip(object) {
     else console.log("Tu ne peux pas déséquiper " + object.Name + ", il n'est pas équipé sur toi.");
 }
 
-function Attack(attacker, target, counter = false, counter_func) {
+function Attack(attacker, target, counter_func) {
     let dice_result = dice_module.DicesRoll(20);
 
     let attacker_attack = dice_result[0] + attacker.Strength;
-    console.log("Attaquant dégats : " + attacker_attack);
 
     if (dice_result == 20) {
         target.Health -= attacker_attack;
+        console.log("C'est un coup critique ! l'attaque de " + attacker.Name + " passe au travers de l'armure, infligeant " + attacker_attack + " points de dégats à " + target.Name + ". HP restants : " + target.Health);
     }
     else if (dice_result == 1) {
-        console.log("Echec critique. Cela n'a aucun effet sur la cible");
+        console.log("Echec critique. Cela n'a aucun effet sur " + target.Name);
     }
     else {
         if (attacker_attack > target.Armor) {
             target.Health -= attacker_attack;
+            console.log("L'attaque de " + attacker.Name + " passe au travers de l'armure, infligeant " + attacker_attack + " points de dégats à " + target.Name + ". HP restants : " + target.Health);
         }
-        else console.log("L'attaque à échouée.")
+        else console.log("L'attaque à échouée. Le jet d'attaque de " + attacker.Name + " n'est pas suffisant pour réussir à percer l'armure de " + target.Name);
     }
 
     if (target.Health <= 0) {
         if (target.IsNpc === true) console.log("Vous avez tuer " + target.Name + ", en mourrant il a laissé tomber " + target.Item);
         else {
-            console.log("Game Over. Vous êtes mort.")
-        }
-    }
-    else {
-        if (counter === false)
-        {
-            counter_func();
+            console.log("Game Over. Vous êtes mort. (et nul, mais chut, cela restera entre nous..)");
         }
     }
 
-    console.log("Target health " + target.Health);
+    counter_func();
 }
 
 function Test() {
-    Attack(player_stats, enemy, false, () => {
-        Attack(enemy, player_stats, true);
+    Take(health_potion);
+
+    Use(health_potion);
+
+    Attack(player_stats, enemy, () => {
+        Attack(enemy, player_stats, () => {
+        });
+    });
+    Attack(player_stats, enemy, () => {
+        Attack(enemy, player_stats, () => {
+        });
     });
 }
 
