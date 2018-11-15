@@ -1,18 +1,15 @@
 const dice_module = require("./DiceRoll.js");
 const tools_module = require("./Tools.js");
-const item_module = require("./Items.js")
-
-list_item = item_module.items;
-
-console.log(list_item);
+const item_module = require("./Items.js");
+const monster_module = require('./Monsters.js');
 
 const playable_characters = {
 
 };
 
 const player_stats = {
-    Name: "Player",
-    Strength: 10,
+    Name: "Bob",
+    Strength: 40,
     Armor: 12,
     IsNpc: false,
     MaxHealth: 100,
@@ -79,6 +76,7 @@ function Equip(object) {
     if (player_inventory.indexOf(object) != -1) {
         if (player_equipment[object.Type] == undefined) {
             player_equipment[object.Type] = object;
+            object.Effect(player_stats, true);
             player_inventory.splice(player_inventory.indexOf(object), 1);
         }
         else console.log("Il y a déjà quelque chose d'équiper sur ce slot, veuillez le déséquiper avant.");
@@ -89,6 +87,7 @@ function Equip(object) {
 function Unequip(object) {
     if (player_equipment[object.Type] == object) {
         player_equipment[object.Type] = undefined;
+        object.Effect(player_stats, false);
         player_inventory.push(object);
     }
     else console.log("Tu ne peux pas déséquiper " + object.Name + ", il n'est pas équipé sur toi.");
@@ -125,6 +124,10 @@ function Attack(attacker, target, counter_func) {
 }
 
 function Test() {
+    Take(item_module.items[Object.keys(item_module.items)[7]]);
+
+    Equip(item_module.items[Object.keys(item_module.items)[7]]);
+
     Attack(player_stats, enemy, () => {
         Attack(enemy, player_stats, () => {
         });

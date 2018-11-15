@@ -14,8 +14,7 @@ let health_potion = CreateObject("HealthPotion", "Usable", 2, 10, (player) => {
         player.Health += heal_points;
         console.log("Vous regagnez " + heal_points + " HP");
     }
-    else 
-    {
+    else {
         player.Health = player.MaxHealth;
         console.log("Grâce à la sainte potion, vous êtes de nouveau full life !");
     }
@@ -39,10 +38,18 @@ let leather_helmet = CreateObject("LeatherHelmet", "Head", 4, 25, (player) => {
     player.Health += 4;
 });
 
-let leather_chest = CreateObject("LeatherChest", "Chest", 5, 30, (player) => {
-    player.Armor += 4;
-    player.MaxHealth += 8;
-    player.Health += 8;
+let leather_chest = CreateObject("LeatherChest", "Chest", 5, 30, (player, isEquiped) => {
+    if (isEquiped) {
+        player.Armor += 4;
+        player.MaxHealth += 8;
+        player.Health += 8;
+    }
+    else
+    {
+        player.Armor -= 4;
+        player.MaxHealth -= 8;
+        player.Health -= 8;
+    }
 });
 
 let leather_boots = CreateObject("LeatherBoots", "Foot", 3, 18, (player) => {
@@ -51,7 +58,16 @@ let leather_boots = CreateObject("LeatherBoots", "Foot", 3, 18, (player) => {
     player.Health += 3;
 });
 
-let list_item = [sword, shield, health_potion, leather_gloves, leather_pants, leather_helmet, leather_chest, leather_boots];
+let list_item = {
+    Sword: sword,
+    Shield: shield,
+    HealthPotion: health_potion,
+    LeatherGloves: leather_gloves,
+    LeatherPants: leather_pants,
+    LeatherHelmet: leather_helmet,
+    LeatherBoots: leather_boots,
+    LeatherChest: leather_chest,
+};
 
 function CreateObject(name, type, weight, price, effect = undefined) {
     return object = {
