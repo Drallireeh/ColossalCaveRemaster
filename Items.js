@@ -1,11 +1,23 @@
-let sword = CreateObject("Longsword", "RightHand", 20, 50, (player) => {
-    player.Strength += 6;
+let sword = CreateObject("Longsword", "RightHand", 20, 50, (player, isEquiped) => {
+    if (isEquiped) {
+        player.Strength += 6;
+    }
+    else {
+        player.Strength -= 6;
+    }
 });
 
-let shield = CreateObject("Little Shield", "LeftHand", 15, 20, (player) => {
-    player.Armor += 4;
-    player.MaxHealth += 1;
-    player.Health += 1;
+let shield = CreateObject("Little Shield", "LeftHand", 15, 20, (player, isEquiped) => {
+    if (isEquiped) {
+        player.Armor += 4;
+        player.MaxHealth += 1;
+        player.Health += 1;
+    }
+    else {
+        player.Armor -= 4;
+        player.MaxHealth -= 1;
+        player.Health -= 1;
+    }
 });
 
 let health_potion = CreateObject("HealthPotion", "Usable", 2, 10, (player) => {
@@ -20,22 +32,43 @@ let health_potion = CreateObject("HealthPotion", "Usable", 2, 10, (player) => {
     }
 });
 
-let leather_gloves = CreateObject("LeatherGloves", "Hands", 3, 12, (player) => {
-    player.Armor += 2;
-    player.MaxHealth += 3;
-    player.Health += 3;
+let leather_gloves = CreateObject("LeatherGloves", "Hands", 3, 12, (player, isEquiped) => {
+    if (isEquiped) {
+        player.Armor += 2;
+        player.MaxHealth += 3;
+        player.Health += 3;
+    }
+    else {
+        player.Armor -= 2;
+        player.MaxHealth -= 3;
+        player.Health -= 3;
+    }
 });
 
-let leather_pants = CreateObject("LeatherPants", "Legs", 5, 20, (player) => {
-    player.Armor += 3;
-    player.MaxHealth += 6;
-    player.Health += 6;
+let leather_pants = CreateObject("LeatherPants", "Legs", 5, 20, (player, isEquiped) => {
+    if (isEquiped) {
+        player.Armor += 3;
+        player.MaxHealth += 6;
+        player.Health += 6;
+    }
+    else {
+        player.Armor -= 3;
+        player.MaxHealth -= 6;
+        player.Health -= 6;
+    }
 });
 
-let leather_helmet = CreateObject("LeatherHelmet", "Head", 4, 25, (player) => {
-    player.Armor += 3;
-    player.MaxHealth += 4;
-    player.Health += 4;
+let leather_helmet = CreateObject("LeatherHelmet", "Head", 4, 25, (player, isEquiped) => {
+    if (isEquiped) {
+        player.Armor += 3;
+        player.MaxHealth += 4;
+        player.Health += 4;
+    }
+    else {
+        player.Armor -= 3;
+        player.MaxHealth -= 4;
+        player.Health -= 4;
+    }
 });
 
 let leather_chest = CreateObject("LeatherChest", "Chest", 5, 30, (player, isEquiped) => {
@@ -44,18 +77,24 @@ let leather_chest = CreateObject("LeatherChest", "Chest", 5, 30, (player, isEqui
         player.MaxHealth += 8;
         player.Health += 8;
     }
-    else
-    {
+    else {
         player.Armor -= 4;
         player.MaxHealth -= 8;
         player.Health -= 8;
     }
 });
 
-let leather_boots = CreateObject("LeatherBoots", "Foot", 3, 18, (player) => {
-    player.Armor += 2;
-    player.MaxHealth += 3;
-    player.Health += 3;
+let leather_boots = CreateObject("LeatherBoots", "Foot", 3, 18, (player, isEquiped) => {
+    if (isEquiped) {
+        player.Armor += 2;
+        player.MaxHealth += 3;
+        player.Health += 3;
+    }
+    else {
+        player.Armor -= 2;
+        player.MaxHealth -= 3;
+        player.Health -= 3;
+    }
 });
 
 let list_item = {

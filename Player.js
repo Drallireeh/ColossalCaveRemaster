@@ -31,15 +31,6 @@ let player_equipment = {
     LeftHand: undefined
 };
 
-let enemy = {
-    Name: "Françis",
-    Armor: 1,
-    Strength: 5,
-    IsNpc: true,
-    Item: undefined,
-    Health: 85
-}
-
 function Take(object) {
     if (player_inventory_weight + object.Weight <= inventory_capacity) {
         player_inventory.push(object);
@@ -126,16 +117,9 @@ function Attack(attacker, target, counter_func) {
 function Test() {
     Take(item_module.items[Object.keys(item_module.items)[7]]);
 
-    Equip(item_module.items[Object.keys(item_module.items)[7]]);
+    console.log(player_stats)
 
-    Attack(player_stats, enemy, () => {
-        Attack(enemy, player_stats, () => {
-        });
-    });
-    Attack(player_stats, enemy, () => {
-        Attack(enemy, player_stats, () => {
-        });
-    });
+    Equip(item_module.items[Object.keys(item_module.items)[7]]);
 }
 
 Test();
