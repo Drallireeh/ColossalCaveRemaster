@@ -2,6 +2,7 @@ const dice_module = require("./DiceRoll.js");
 const tools_module = require("./Tools.js");
 const item_module = require("./Items.js");
 const monster_module = require('./Monsters.js');
+const map_module = require('./Map.js');
 
 // const playable_characters = {
 
@@ -9,9 +10,9 @@ const monster_module = require('./Monsters.js');
 
 const player_stats = {
     IsNpc: false,
-    Name: "Bob",
-    Strength: 40,
-    Armor: 12,
+    Name: "Bob La Malice",
+    Strength: 8,
+    Armor: 10,
     MaxHealth: 100,
     Health: 100,
     InventoryWeight: 0
@@ -31,8 +32,7 @@ let player_equipment = {
     LeftHand: undefined
 };
 
-function UpdateInventoryCapacity()
-{
+function UpdateInventoryCapacity() {
     inventory_capacity = player_stats.Strength * 7.5;
 }
 
@@ -113,11 +113,18 @@ function Attack(attacker, target, counter_func) {
     }
 
     if (target.Health <= 0) {
-        if (target.IsNpc === true) console.log("Vous avez tuer " + target.Name + ", en mourrant il a laissé tomber " + target.Item);
+        if (target.IsNpc === true) {
+            console.log("Vous avez tuer " + target.Name + ", en mourrant il a laissé tomber " + target.Item.Name);
+            map_module.item = target.Item;
+            map_module.game_mode = "exploration";
+            map_module.UpdateGameMode("exploration");
+            return;
+        }
         else {
             console.log("Game Over. Vous êtes mort. (et nul, mais chut, cela restera entre nous..)");
             process.exit();
         }
+
     }
 
     counter_func();
@@ -125,3 +132,5 @@ function Attack(attacker, target, counter_func) {
 
 exports.Take = Take;
 exports.Equip = Equip;
+exports.Attack = Attack;
+exports.player = player_stats;

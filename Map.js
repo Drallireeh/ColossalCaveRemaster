@@ -3,6 +3,8 @@ const monster_module = require("./Monsters.js");
 const item_module = require('./Items.js');
 const game_mode_module = require("./Console.js");
 
+let game_mode = "exploration";
+
 let map = [
     ["_SS", "_", "_", "_R", "_", "_H", "_", "_SQ", "_"],
     ["_", "_", "_SQG", "_", "_S", "_", "_", "_H", "_"],
@@ -196,6 +198,11 @@ function DescDest() {
             text_info += text["Castle"] + text["HealthPotion"];;
             break;
     }
+
+    if (monster != undefined) {
+        UpdateGameMode("fight");
+    }
+
     exports.monster = monster;
     exports.item = item;
 }
@@ -207,4 +214,11 @@ function LogText(text) {
     });
 }
 
+function UpdateGameMode(string) {
+    game_mode = string;
+    exports.game_mode = game_mode;
+}
+
+UpdateGameMode("exploration");
+exports.UpdateGameMode = UpdateGameMode;
 exports.GoTo = Move;

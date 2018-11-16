@@ -3,22 +3,6 @@ const module_log = require('./Tools.js');
 const module_item = require('./Items.js');
 const module_player = require("./Player.js");
 
-let game_mode = "exploration";
-
-// function SlowLog(texte, time, suite) {
-//     let lettreCourante = 0;
-//     for (let i = 0; i < texte.length + 1; i++) {
-//         setTimeout(() => {
-//             if (i < texte.length) {
-//                 process.stdout.write(texte[lettreCourante]);
-//                 lettreCourante++;
-//             } else {
-//                 suite();
-//             }
-//         }, i * time);
-//     }
-// }
-
 let intro =
     `Bienvenue dans le désert de la mort ... ☼
 Partout des ossements de chameaux morts et une odeur de 
@@ -37,7 +21,7 @@ process.stdin.setEncoding('utf8');
 process.stdin.on('data', (d) => {
     let rep = d.toString().trim();
     rep = rep.toLowerCase();
-    if (game_mode == "exploration") {
+    if (module_map.game_mode == "exploration") {
 
         if (rep.indexOf("go") != -1) {
             switch (rep) {
@@ -67,13 +51,6 @@ process.stdin.on('data', (d) => {
                     break;
             }
         }
-
-        // A bouger dans map à la fin
-
-        if (module_map.monster != undefined) {
-            game_mode = "fight";
-        }
-
         ////////////////// RAMASSAGE SCOLAIRE //////////////////
 
         // take what a faire après 
@@ -83,7 +60,7 @@ process.stdin.on('data', (d) => {
             }
             else {
                 process.stdin.pause();
-                module_log.SlowLogInTools("Action impossible, ce n'est pas le bon objet", 20, () => {
+                module_log.SlowLogInTools("Action impossible, ce n'est pas le bon objet\n", 20, () => {
                     process.stdin.resume();
                 });
             }
@@ -94,7 +71,7 @@ process.stdin.on('data', (d) => {
             }
             else {
                 process.stdin.pause();
-                module_log.SlowLogInTools("Action impossible, ce n'est pas le bon objet", 20, () => {
+                module_log.SlowLogInTools("Action impossible, ce n'est pas le bon objet\n", 20, () => {
                     process.stdin.resume();
                 });
             }
@@ -105,7 +82,7 @@ process.stdin.on('data', (d) => {
             }
             else {
                 process.stdin.pause();
-                module_log.SlowLogInTools("Action impossible, ce n'est pas le bon objet", 20, () => {
+                module_log.SlowLogInTools("Action impossible, ce n'est pas le bon objet\n", 20, () => {
                     process.stdin.resume();
                 });
             }
@@ -116,7 +93,7 @@ process.stdin.on('data', (d) => {
             }
             else {
                 process.stdin.pause();
-                module_log.SlowLogInTools("Action impossible, ce n'est pas le bon objet", 20, () => {
+                module_log.SlowLogInTools("Action impossible, ce n'est pas le bon objet\n", 20, () => {
                     process.stdin.resume();
                 });
             }
@@ -127,7 +104,7 @@ process.stdin.on('data', (d) => {
             }
             else {
                 process.stdin.pause();
-                module_log.SlowLogInTools("Action impossible, ce n'est pas le bon objet", 20, () => {
+                module_log.SlowLogInTools("Action impossible, ce n'est pas le bon objet\n", 20, () => {
                     process.stdin.resume();
                 });
             }
@@ -138,7 +115,7 @@ process.stdin.on('data', (d) => {
             }
             else {
                 process.stdin.pause();
-                module_log.SlowLogInTools("Action impossible, ce n'est pas le bon objet", 20, () => {
+                module_log.SlowLogInTools("Action impossible, ce n'est pas le bon objet\n", 20, () => {
                     process.stdin.resume();
                 });
             }
@@ -149,7 +126,7 @@ process.stdin.on('data', (d) => {
             }
             else {
                 process.stdin.pause();
-                module_log.SlowLogInTools("Action impossible, ce n'est pas le bon objet", 20, () => {
+                module_log.SlowLogInTools("Action impossible, ce n'est pas le bon objet\n", 20, () => {
                     process.stdin.resume();
                 });
             }
@@ -160,7 +137,7 @@ process.stdin.on('data', (d) => {
             }
             else {
                 process.stdin.pause();
-                module_log.SlowLogInTools("Action impossible, ce n'est pas le bon objet", 20, () => {
+                module_log.SlowLogInTools("Action impossible, ce n'est pas le bon objet\n", 20, () => {
                     process.stdin.resume();
                 });
             }
@@ -196,26 +173,24 @@ process.stdin.on('data', (d) => {
             process.exit();
         }
     }
-    else if (game_mode == "fight") {
+    else if (module_map.game_mode == "fight") {
         if (rep == "attack") {
-            console.log(monster);
+            module_player.Attack(module_player.player, module_map.monster, () => {
+                module_player.Attack(module_map.monster, module_player.player, () => { });
+            });
         }
         else {
             process.stdin.pause();
-            module_log.SlowLogInTools("Action impossible en plein combat", 20, () => {
+            module_log.SlowLogInTools("Action impossible en plein combat\n", 20, () => {
                 process.stdin.resume();
             });
         }
     }
 });
 
-
-/* début du script ici */
 process.stdin.pause(); //stopper l'entrée pour ne pas pirater le texte
 module_log.SlowLogInTools(intro, 10, () => {
-    module_log.SlowLogInTools("on fait quoi ?\n", 10, () => {
+    module_log.SlowLogInTools("En attente d'ordre :\n", 10, () => {
         process.stdin.resume();//réactiver l'entrée
     });
 });
-
-exports.SetGameMode = game_mode;
