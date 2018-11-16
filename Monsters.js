@@ -8,7 +8,7 @@ monsters = {
         MaxHealth: 25,
         Health: 25,
         Strength: 4,
-        Item: item_module.items[Object.keys(item_module.items)[2]], // pot
+        Item: item_module.items["HealthPotion"], // pot
     },
     Guard: {
         Name: "Guard",

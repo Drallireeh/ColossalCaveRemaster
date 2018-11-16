@@ -1,4 +1,5 @@
 const module_tools = require("./Tools.js");
+const monster_module = require("./Monsters.js");
 
 let map = [
     ["_SS", "_", "_", "_R", "_", "_H", "_", "_SQ", "_"],
@@ -21,46 +22,64 @@ let player_coord = {
  * @param {} direction N, NE, NW, E, W, SE, SW ou S 
  */
 function Go(direction) {
+    let monster = undefined;
+
+    process.stdin.pause();
+
     switch (direction) {
         case "W":
             if (player_coord.x > 0) {
                 player_coord.x--;
-                console.log("Vous vous déplacez à l'ouest");
+                module_tools.SlowLogInTools("Vous vous déplacez à l'ouest\n", 10, () => {
+                    Description();
+                });
             }
             else {
-                console.log("Action Impossible");
+                module_tools.SlowLogInTools("Action Impossible\n", 10, () => {
+                    Description();
+                });
                 return undefined;
             }
             break;
         case "N":
             if (player_coord.y > 0) {
                 player_coord.y--;
-                console.log("Vous vous déplacez au nord");
+                module_tools.SlowLogInTools("Vous vous déplacez au nord\n", 10, () => {
+                    Description();
+                });
             }
             else {
-                console.log("Action Impossible");
+                module_tools.SlowLogInTools("Action Impossible\n", 10, () => {
+                    Description();
+                });
                 return undefined;
             }
             break;
         case "E":
             if (player_coord.x < map[player_coord.y].length - 1) {
                 player_coord.x++;
-                module_tools.SlowLogInTools("Vous vous déplacez à l'est", 50, () => {
-                    process.stdin.resume();
+                module_tools.SlowLogInTools("Vous vous déplacez à l'est\n", 10, () => {
+                    Description();
                 });
             }
             else {
-                console.log("Action Impossible");
+                module_tools.SlowLogInTools("Action Impossible\n", 10, () => {
+                    Description();
+                });
                 return undefined;
             }
             break;
         case "S":
             if (player_coord.y < map.length - 1) {
                 player_coord.y++;
-                console.log("Vous vous déplacez au sud");
+                module_tools.SlowLogInTools("Vous vous déplacez au sud\n", 10, () => {
+                    Description();
+                });
             }
             else {
-                console.log("Action Impossible");
+                module_tools.SlowLogInTools("Action Impossible\n", 10, () => {
+                    Description();
+                });
                 return undefined;
             }
             break;
@@ -68,10 +87,14 @@ function Go(direction) {
             if (player_coord.y > 0 && player_coord.x > 0) {
                 player_coord.x--;
                 player_coord.y--;
-                console.log("Vous vous déplacez au nord-ouest");
+                module_tools.SlowLogInTools("Vous vous déplacez au nord-ouest\n", 10, () => {
+                    Description();
+                });
             }
             else {
-                console.log("Action Impossible");
+                module_tools.SlowLogInTools("Action Impossible\n", 10, () => {
+                    Description();
+                });
                 return undefined;
             }
             break;
@@ -79,10 +102,14 @@ function Go(direction) {
             if (player_coord.y > 0 && player_coord.x < map[player_coord.y].length - 1) {
                 player_coord.x++;
                 player_coord.y--;
-                console.log("Vous vous déplacez au nord-est");
+                module_tools.SlowLogInTools("Vous vous déplacez au nord-est\n", 10, () => {
+                    Description();
+                });
             }
             else {
-                console.log("Action Impossible");
+                module_tools.SlowLogInTools("Action Impossible\n", 10, () => {
+                    Description();
+                });
                 return undefined;
             }
             break;
@@ -90,10 +117,14 @@ function Go(direction) {
             if (player_coord.y < map.length - 1 && player_coord.x > 0) {
                 player_coord.x--;
                 player_coord.y++;
-                console.log("Vous vous déplacez au sud-ouest");
+                module_tools.SlowLogInTools("Vous vous déplacez au sud-ouest\n", 100, () => {
+                    Description();
+                });
             }
             else {
-                console.log("Action Impossible");
+                module_tools.SlowLogInTools("Action Impossible\n", 10, () => {
+                    Description();
+                });
                 return undefined;
             }
             break;
@@ -101,78 +132,113 @@ function Go(direction) {
             if (player_coord.y < map.length - 1 && player_coord.x < map[player_coord.y].length - 1) {
                 player_coord.x++;
                 player_coord.y++;
-                console.log("Vous vous déplacez au sud-est");
+                module_tools.SlowLogInTools("Vous vous déplacez au sud-est\n", 10, () => {
+                    Description();
+                });
             }
             else {
-                console.log("Action Impossible");
+                module_tools.SlowLogInTools("Action Impossible\n", 10, () => {
+                    Description();
+                });
                 return undefined;
             }
             break;
         default:
     }
 
+    return monster;
+}
+
+function Description() {
+    process.stdin.pause();
+
     switch (map[player_coord.y][player_coord.x]) {
         case "_":
-            console.log("Vous êtes dans une plaine");
+            module_tools.SlowLogInTools("Vous êtes dans une plaine\n", 10, () => {
+                process.stdin.resume();
+            });
             break;
         case "C":
-            console.log("Vous êtes dans un chateau");
+            module_tools.SlowLogInTools("Vous êtes dans un chateau\n", 10, () => {
+                process.stdin.resume();
+            });
             break;
         case "F":
-            console.log("Vous êtes dans une forêt");
+            module_tools.SlowLogInTools("Vous êtes dans une forêt\n", 10, () => {
+                process.stdin.resume();
+            });
             break;
         case "FS":
-            console.log(`Vous êtes dans une forêt.
-            Une araignée géante surgit tout à coup devant vous.`);
+            module_tools.SlowLogInTools("Vous êtes dans une forêt.\nUne araignée géante surgit tout à coup devant vous.\n", 10, () => {
+                    monster = monster_module.monsters["Spider"];
+                    process.stdin.resume();
+                });
             break;
         case "FB":
-            console.log(`Vous êtes dans une forêt.
-            Vous voyez sous une souche morte une paire de botte en cuir.`);
+            module_tools.SlowLogInTools("Vous êtes dans une forêt.\nVous voyez sous une souche morte une paire de botte en cuir.\n", 10, () => {
+                    process.stdin.resume();
+                });
             break;
         case "_S":
-            console.log(`Vous êtes dans une plaine.
-            Vous voyez un objet briller dans l'herbe.`);
+            module_tools.SlowLogInTools("Vous êtes dans une plaine.\nVous voyez un objet briller dans l'herbe.\n", 10, () => {
+                    process.stdin.resume();
+                });
             break;
         case "_SS":
-            console.log(`Vous êtes dans une plaine.
-            Une araignée géante surgit tout à coup devant vous.`);
+            module_tools.SlowLogInTools("Vous êtes dans une plaine.\nUne araignée géante surgit tout à coup devant vous.\n", 10, () => {
+                    monster = monster_module.monsters[Object.keys(monster_module.monsters)[0]];
+                    process.stdin.resume();
+                });
             break;
         case "_SQ":
-            console.log(`Vous êtes dans une plaine.
-            Un Squelette se dresse devant vous, prêt à en découdre.`);
+            module_tools.SlowLogInTools("Vous êtes dans une plaine.\nUn Squelette se dresse devant vous, prêt à en découdre.\n", 10, () => {
+                    monster = monster_module.monsters[Object.keys(monster_module.monsters)[3]];
+                    process.stdin.resume();
+                });
             break;
         case "_SQG":
-            console.log(`Vous êtes dans une plaine.
-            Un Squelette se dresse devant vous, prêt à en découdre.
-            Il porte une paire de gants en cuir de mauvaise facture`);
+            module_tools.SlowLogInTools("Vous êtes dans une plaine.\nUn Squelette se dresse devant vous, prêt à en découdre.\nIl porte une paire de gants en cuir de mauvaise facture\n", 10, () => {
+                    monster = monster_module.monsters[Object.keys(monster_module.monsters)[3]];
+                    process.stdin.resume();
+                });
             break;
         case "_R":
-            console.log(`Vous êtes dans une plaine.
-            Un roturier surgit de derrière une pierre pour vous détrousser.`);
+            module_tools.SlowLogInTools("Vous êtes dans une plaine.\nUn roturier surgit de derrière une pierre pour vous détrousser.\n", 10, () => {
+                    monster = monster_module.monsters[Object.keys(monster_module.monsters)[2]];
+                    process.stdin.resume();
+                });
             break;
         case "L":
-            console.log(`Vous êtes au pied d'un lac.`);
-            break;
+            module_tools.SlowLogInTools("Vous êtes au pied d'un lac.", 10, () => {
+                process.stdin.resume();
+            });            break;
         case "_H":
-            console.log(`Vous êtes dans une plaine.
-            Une bouteille au contenu indéterminé gît non loin de là.`);
+            module_tools.SlowLogInTools("Vous êtes dans une plaine.\nUne bouteille au contenu indéterminé gît non loin de là.\n", 10, () => {
+                    process.stdin.resume();
+                });
             break;
         case "CSQ":
-            console.log(`Vous êtes dans un chateau.
-            Un Squelette se dresse devant vous, prêt à en découdre.`);
+            module_tools.SlowLogInTools("Vous êtes dans un chateau.\nUn Squelette se dresse devant vous, prêt à en découdre.\n", 10, () => {
+                    monster = monster_module.monsters[Object.keys(monster_module.monsters)[3]];
+                    process.stdin.resume();
+                });
             break;
         case "CG":
-            console.log(`Vous êtes dans un chateau.
-            Un garde est en plein milieu de votre couloir, et il ne semble pas décider à vous laisser passer !`);
+            module_tools.SlowLogInTools("Vous êtes dans un chateau.\nUn garde est en plein milieu de votre couloir, et il ne semble pas décider à vous laisser passer !\n", 10, () => {
+                    monster = monster_module.monsters[Object.keys(monster_module.monsters)[1]];
+                    process.stdin.resume();
+                });
             break;
         case "CA":
-            console.log(`Vous êtes dans un chateau.
-            Une hallebarde s'abat là ou vous étiez une demi seconde plus tôt. Mais que ...
-            Une armure vivante ! C'est probablement un adversaire corriace !`);
+            module_tools.SlowLogInTools("Vous êtes dans un chateau.\nUne hallebarde s'abat là ou vous étiez une demi seconde plus tôt. Mais que ...\nUne armure vivante ! C'est probablement un adversaire corriace !\n", 10, () => {
+                    monster = monster_module.monsters[Object.keys(monster_module.monsters)[4]];
+                    process.stdin.resume();
+                });
             break;
         case "CH":
-            console.log(`Vous êtes dans un chateau.
-            Vous voyez dans un coin de la pièce une bouteille au contenu rougeatre.`);
+            module_tools.SlowLogInTools("Vous êtes dans un chateau.\nVous voyez dans un coin de la pièce une bouteille au contenu rougeatre.\n", 10, () => {
+                    process.stdin.resume();
+                });
             break;
     }
 }

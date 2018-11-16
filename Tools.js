@@ -10,17 +10,16 @@
 //             process.stdout.write(string[count]);
 //             count++;
 //             SlowLog(string, time_in_ms, count);
-
 //         }, time_in_ms);
 //     }
 // }
 
-function SlowLog(texte, time, suite) {
+function SlowLog(text, time, suite) {
     let lettreCourante = 0;
-    for (let i = 0; i < texte.length + 1; i++) {
+    for (let i = 0; i < text.length + 1; i++) {
         setTimeout(() => {
-            if (i < texte.length) {
-                process.stdout.write(texte[lettreCourante]);
+            if (i < text.length) {
+                process.stdout.write(text[lettreCourante]);
                 lettreCourante++;
             } else {
                 suite();
