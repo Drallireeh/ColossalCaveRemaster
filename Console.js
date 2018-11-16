@@ -1,8 +1,6 @@
 const module_map = require("./Map.js");
 const module_log = require('./Tools.js');
 
-let monster = undefined;
-
 let game_mode = "exploration";
 
 // function SlowLog(texte, time, suite) {
@@ -42,35 +40,35 @@ process.stdin.on('data', (d) => {
         if (rep.indexOf("go") != -1) {
             switch (rep) {
                 case "go n":
-                    monster = module_map.GoTo("N");
+                    module_map.GoTo("N");
                     break;
                 case "go e":
-                    monster = module_map.GoTo("E");
-                    console.log(monster);
+                    module_map.GoTo("E");
                     break;
                 case "go s":
-                    monster = module_map.GoTo("S");
+                    module_map.GoTo("S");
                     break;
                 case "go w":
-                    monster = module_map.GoTo("W");
+                    module_map.GoTo("W");
                     break;
                 case "go ne":
-                    monster = module_map.GoTo("NE");
+                    module_map.GoTo("NE");
                     break;
                 case "go nw":
-                    monster = module_map.GoTo("NW");
+                    module_map.GoTo("NW");
                     break;
                 case "go se":
-                    monster = module_map.GoTo("SE");
+                    module_map.GoTo("SE");
                     break;
                 case "go sw":
-                    monster = module_map.GoTo("SW");
+                    module_map.GoTo("SW");
                     break;
             }
-
         }
 
-        if (monster != undefined) {
+        console.log(module_map.monster);
+
+        if (module_map.monster != undefined) {
             game_mode = "fight";
             console.log("FIGHT")
         }

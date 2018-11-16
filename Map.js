@@ -1,5 +1,6 @@
 const module_tools = require("./Tools.js");
 const monster_module = require("./Monsters.js");
+const item_module = require('./Items.js');
 const game_mode_module = require("./Console.js");
 
 let map = [
@@ -18,222 +19,192 @@ let player_coord = {
     y: 0
 };
 
+text = {
+    Castle: "Vous êtes dans un chateau\n",
+    Forest: "Vous êtes dans une forêt\n",
+    Plaine: "Vous êtes dans une plaine\n",
+    Lake: "Vous êtes au pied d'un lac.\n",
+    Spider: "Une araignée géante surgit tout à coup devant vous.\n",
+    Squeleton: "Un Squelette se dresse devant vous, prêt à en découdre.\n",
+    Guard: "Un garde est en plein milieu de votre chemin, et il ne semble pas décider à vous laisser passer !\n",
+    Commoner: "Un roturier surgit de derrière une pierre pour vous détrousser.\n",
+    LivingArmor: "Une hallebarde s'abat là ou vous étiez une demi seconde plus tôt. Mais que ...\nUne armure vivante ! C'est probablement un adversaire corriace !\n",
+    Sword: "Vous voyez une garde d'épée dépasser d'un amas rocheux.\n",
+    LeatherBoots: "Vous voyez sous une souche morte une paire de botte en cuir.\n",
+    HealthPotion: "Une bouteille au contenu rougeatre gît non loin de là. On dirait une potion de soins\n"
+}
+
 let monster = undefined;
+let item = undefined;
+let text_info = "";
 
 /**
  * 
  * @param {} direction N, NE, NW, E, W, SE, SW ou S 
  */
-function Go(direction) {
-    process.stdin.pause();
+function Move(direction) {
+    text_info = "";
 
     switch (direction) {
         case "W":
             if (player_coord.x > 0) {
                 player_coord.x--;
-                module_tools.SlowLogInTools("Vous vous déplacez à l'ouest\n", 10, () => {
-                    Description();
-                });
+                text_info += "Vous vous déplacez à l'ouest\n";
             }
             else {
-                module_tools.SlowLogInTools("Action Impossible\n", 10, () => {
-                    Description();
-                });
+                text_info += "Action Impossible\n";
             }
             break;
         case "N":
             if (player_coord.y > 0) {
                 player_coord.y--;
-                module_tools.SlowLogInTools("Vous vous déplacez au nord\n", 10, () => {
-                    Description();
-                });
+                text_info += "Vous vous déplacez au nord\n";
             }
             else {
-                module_tools.SlowLogInTools("Action Impossible\n", 10, () => {
-                    Description();
-                });
+                text_info += "Action Impossible\n";
             }
             break;
         case "E":
             if (player_coord.x < map[player_coord.y].length - 1) {
                 player_coord.x++;
-                module_tools.SlowLogInTools("Vous vous déplacez à l'est\n", 10, () => {
-                    Description();
-                });
+                text_info += "Vous vous déplacez à l'est\n";
             }
             else {
-                module_tools.SlowLogInTools("Action Impossible\n", 10, () => {
-                    Description();
-                });
+                text_info += "Action Impossible\n";
             }
             break;
         case "S":
             if (player_coord.y < map.length - 1) {
                 player_coord.y++;
-                module_tools.SlowLogInTools("Vous vous déplacez au sud\n", 10, () => {
-                    Description();
-                });
+                text_info += "Vous vous déplacez au sud\n";
             }
             else {
-                module_tools.SlowLogInTools("Action Impossible\n", 10, () => {
-                    Description();
-                });
+                text_info += "Action Impossible\n";
             }
             break;
         case "NW":
             if (player_coord.y > 0 && player_coord.x > 0) {
                 player_coord.x--;
                 player_coord.y--;
-                module_tools.SlowLogInTools("Vous vous déplacez au nord-ouest\n", 10, () => {
-                    Description();
-                });
+                text_info += "Vous vous déplacez au nord-ouest\n";
             }
             else {
-                module_tools.SlowLogInTools("Action Impossible\n", 10, () => {
-                    Description();
-                });
+                text_info += "Action Impossible\n";
             }
             break;
         case "NE":
             if (player_coord.y > 0 && player_coord.x < map[player_coord.y].length - 1) {
                 player_coord.x++;
                 player_coord.y--;
-                module_tools.SlowLogInTools("Vous vous déplacez au nord-est\n", 10, () => {
-                    Description();
-                });
+                text_info += "Vous vous déplacez au nord-est\n";
             }
             else {
-                module_tools.SlowLogInTools("Action Impossible\n", 10, () => {
-                    Description();
-                });
+                text_info += "Action Impossible\n";
             }
             break;
         case "SW":
             if (player_coord.y < map.length - 1 && player_coord.x > 0) {
                 player_coord.x--;
                 player_coord.y++;
-                module_tools.SlowLogInTools("Vous vous déplacez au sud-ouest\n", 100, () => {
-                    Description();
-                });
+                text_info += "Vous vous déplacez au sud-ouest\n";
             }
             else {
-                module_tools.SlowLogInTools("Action Impossible\n", 10, () => {
-                    Description();
-                });
+                text_info += "Action Impossible\n";
             }
             break;
         case "SE":
             if (player_coord.y < map.length - 1 && player_coord.x < map[player_coord.y].length - 1) {
                 player_coord.x++;
                 player_coord.y++;
-                module_tools.SlowLogInTools("Vous vous déplacez au sud-est\n", 10, () => {
-                    Description();
-                });
+                text_info += "Vous vous déplacez au sud-est\n";
             }
             else {
-                module_tools.SlowLogInTools("Action Impossible\n", 10, () => {
-                    Description();
-                });
+                text_info += "Action Impossible\n";
             }
             break;
         default:
     }
-    console.log(monster);
-    return monster;
+
+    DescDest();
+    LogText(text_info);
 }
 
-function Description() {
-    process.stdin.pause();
+function DescDest() {
+    monster = undefined;
+    item = undefined;
 
     switch (map[player_coord.y][player_coord.x]) {
         case "_":
-            module_tools.SlowLogInTools("Vous êtes dans une plaine\n", 10, () => {
-                process.stdin.resume();
-            });
+            text_info += text["Plaine"];
             break;
         case "C":
-            module_tools.SlowLogInTools("Vous êtes dans un chateau\n", 10, () => {
-                process.stdin.resume();
-            });
+            text_info += text["Castle"];
             break;
         case "F":
-            module_tools.SlowLogInTools("Vous êtes dans une forêt\n", 10, () => {
-                process.stdin.resume();
-            });
+            text_info += text["Forest"];
             break;
         case "FS":
-            module_tools.SlowLogInTools("Vous êtes dans une forêt.\nUne araignée géante surgit tout à coup devant vous.\n", 10, () => {
-                monster = monster_module.monsters["Spider"];
-                process.stdin.resume();
-            });
+            monster = monster_module.monsters["Spider"];
+            text_info += text["Forest"] + text["Spider"];
             break;
         case "FB":
-            module_tools.SlowLogInTools("Vous êtes dans une forêt.\nVous voyez sous une souche morte une paire de botte en cuir.\n", 10, () => {
-                process.stdin.resume();
-            });
+            item = item_module.items["LeatherBoots"];
+            text_info += text["Forest"] + text["LeatherBoots"];
             break;
         case "_S":
-            module_tools.SlowLogInTools("Vous êtes dans une plaine.\nVous voyez un objet briller dans l'herbe.\n", 10, () => {
-                process.stdin.resume();
-            });
+            item = item_module.items["Sword"];
+            text_info += text["Plaine"] + text["Sword"];
             break;
         case "_SS":
-            module_tools.SlowLogInTools("Vous êtes dans une plaine.\nUne araignée géante surgit tout à coup devant vous.\n", 10, () => {
-                monster = monster_module.monsters["Spider"];
-                process.stdin.resume();
-            });
+            monster = monster_module.monsters["Spider"];
+            text_info += text["Plaine"] + text["Spider"];
             break;
         case "_SQ":
             monster = monster_module.monsters["Squeleton"];
-            module_tools.SlowLogInTools("Vous êtes dans une plaine.\nUn Squelette se dresse devant vous, prêt à en découdre.\n", 10, () => {
-                process.stdin.resume();
-            });
+            text_info += text["Plaine"] + text["Squeleton"];
             break;
         case "_SQG":
-            module_tools.SlowLogInTools("Vous êtes dans une plaine.\nUn Squelette se dresse devant vous, prêt à en découdre.\nIl porte une paire de gants en cuir de mauvaise facture\n", 10, () => {
-                monster = monster_module.monsters["Squeleton"];
-                process.stdin.resume();
-            });
+            monster = monster_module.monsters["Squeleton"];
+            item = item_module.items["LeatherGloves"];
+            text_info += text["Plaine"] + text["Squeleton"] + "Il porte une paire de gants en cuir de mauvaise facture\n";
             break;
         case "_R":
-            module_tools.SlowLogInTools("Vous êtes dans une plaine.\nUn roturier surgit de derrière une pierre pour vous détrousser.\n", 10, () => {
-                monster = monster_module.monsters["Commoner"];
-                process.stdin.resume();
-            });
+            monster = monster_module.monsters["Commoner"];
+            text_info += text["Plaine"] + text["Commoner"];
             break;
         case "L":
-            module_tools.SlowLogInTools("Vous êtes au pied d'un lac.", 10, () => {
-                process.stdin.resume();
-            }); break;
+            text_info += text["Lake"];
+            break;
         case "_H":
-            module_tools.SlowLogInTools("Vous êtes dans une plaine.\nUne bouteille au contenu indéterminé gît non loin de là.\n", 10, () => {
-                process.stdin.resume();
-            });
+            item = item_module.items["HealthPotion"];
+            text_info += text["Plaine"] + text["HealthPotion"];
             break;
         case "CSQ":
-            module_tools.SlowLogInTools("Vous êtes dans un chateau.\nUn Squelette se dresse devant vous, prêt à en découdre.\n", 10, () => {
-                monster = monster_module.monsters["Squeleton"];
-                process.stdin.resume();
-            });
+            monster = monster_module.monsters["Squeleton"];
+            text_info += text["Castle"] + text["Squeleton"];
             break;
         case "CG":
-            module_tools.SlowLogInTools("Vous êtes dans un chateau.\nUn garde est en plein milieu de votre couloir, et il ne semble pas décider à vous laisser passer !\n", 10, () => {
-                monster = monster_module.monsters["Guard"];
-                process.stdin.resume();
-            });
+            monster = monster_module.monsters["Guard"];
+            ttext_info += text["Castle"] + text["Guard"];;
             break;
         case "CA":
-            module_tools.SlowLogInTools("Vous êtes dans un chateau.\nUne hallebarde s'abat là ou vous étiez une demi seconde plus tôt. Mais que ...\nUne armure vivante ! C'est probablement un adversaire corriace !\n", 10, () => {
-                monster = monster_module.monsters["LivingArmor"];
-                process.stdin.resume();
-            });
+            monster = monster_module.monsters["LivingArmor"];
+            text_info += text["Castle"] + text["LivingArmor"];;
             break;
         case "CH":
-            module_tools.SlowLogInTools("Vous êtes dans un chateau.\nVous voyez dans un coin de la pièce une bouteille au contenu rougeatre.\n", 10, () => {
-                process.stdin.resume();
-            });
+            item = item_module.items["HealthPotion"];
+            text_info += text["Castle"] + text["HealthPotion"];;
             break;
     }
+    exports.monster = monster;
+    exports.item = item;
 }
 
-exports.GoTo = Go;
+function LogText(text) {
+    process.stdin.pause();
+    module_tools.SlowLogInTools(text, 15, () => {
+        process.stdin.resume();
+    });
+}
+
+exports.GoTo = Move;
