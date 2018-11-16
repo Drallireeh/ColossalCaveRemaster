@@ -1,5 +1,7 @@
 const module_map = require("./Map.js");
 const module_log = require('./Tools.js');
+const module_item = require('./Items.js');
+const module_player = require("./Player.js");
 
 let game_mode = "exploration";
 
@@ -36,7 +38,7 @@ process.stdin.on('data', (d) => {
     let rep = d.toString().trim();
     rep = rep.toLowerCase();
     if (game_mode == "exploration") {
-        
+
         if (rep.indexOf("go") != -1) {
             switch (rep) {
                 case "go n":
@@ -66,20 +68,129 @@ process.stdin.on('data', (d) => {
             }
         }
 
-        console.log(module_map.monster);
+        // A bouger dans map à la fin
 
         if (module_map.monster != undefined) {
             game_mode = "fight";
-            console.log("FIGHT")
         }
 
-        if (rep == "take") {
+        ////////////////// RAMASSAGE SCOLAIRE //////////////////
 
+        // take what a faire après 
+        if (rep == "take healthpotion") {
+            if (module_map.item == module_item.items["HealthPotion"]) {
+                module_player.Take(module_map.item);
+            }
+            else {
+                process.stdin.pause();
+                module_log.SlowLogInTools("Action impossible, ce n'est pas le bon objet", 20, () => {
+                    process.stdin.resume();
+                });
+            }
+        }
+        if (rep == "take sword") {
+            if (module_map.item == module_item.items["Sword"]) {
+                module_player.Take(module_map.item);
+            }
+            else {
+                process.stdin.pause();
+                module_log.SlowLogInTools("Action impossible, ce n'est pas le bon objet", 20, () => {
+                    process.stdin.resume();
+                });
+            }
+        }
+        if (rep == "take leatherboots") {
+            if (module_map.item == module_item.items["LeatherBoots"]) {
+                module_player.Take(module_map.item);
+            }
+            else {
+                process.stdin.pause();
+                module_log.SlowLogInTools("Action impossible, ce n'est pas le bon objet", 20, () => {
+                    process.stdin.resume();
+                });
+            }
+        }
+        if (rep == "take shield") {
+            if (module_map.item == module_item.items["Shield"]) {
+                module_player.Take(module_map.item);
+            }
+            else {
+                process.stdin.pause();
+                module_log.SlowLogInTools("Action impossible, ce n'est pas le bon objet", 20, () => {
+                    process.stdin.resume();
+                });
+            }
+        }
+        if (rep == "take leathergloves") {
+            if (module_map.item == module_item.items["LeatherGloves"]) {
+                module_player.Take(module_map.item);
+            }
+            else {
+                process.stdin.pause();
+                module_log.SlowLogInTools("Action impossible, ce n'est pas le bon objet", 20, () => {
+                    process.stdin.resume();
+                });
+            }
+        }
+        if (rep == "take leatherpants") {
+            if (module_map.item == module_item.items["LeatherPants"]) {
+                module_player.Take(module_map.item);
+            }
+            else {
+                process.stdin.pause();
+                module_log.SlowLogInTools("Action impossible, ce n'est pas le bon objet", 20, () => {
+                    process.stdin.resume();
+                });
+            }
+        }
+        if (rep == "take leatherhelmet") {
+            if (module_map.item == module_item.items["LeatherHelmet"]) {
+                module_player.Take(module_map.item);
+            }
+            else {
+                process.stdin.pause();
+                module_log.SlowLogInTools("Action impossible, ce n'est pas le bon objet", 20, () => {
+                    process.stdin.resume();
+                });
+            }
+        }
+        if (rep == "take leatherchest") {
+            if (module_map.item == module_item.items["LeatherChest"]) {
+                module_player.Take(module_map.item);
+            }
+            else {
+                process.stdin.pause();
+                module_log.SlowLogInTools("Action impossible, ce n'est pas le bon objet", 20, () => {
+                    process.stdin.resume();
+                });
+            }
         }
 
-        if (rep == "equip") {
+        ///////////////////// EQUIPEMENT ///////////////////////
 
+        if (rep == "equip sword") {
+            module_player.Equip(module_item.items["Sword"]);
         }
+        if (rep == "equip leatherboots") {
+            module_player.Equip(module_item.items["LeatherBoots"]);
+        }
+        if (rep == "equip shield") {
+            module_player.Equip(module_item.items["Shield"]);
+        }
+        if (rep == "equip leathergloves") {
+            module_player.Equip(module_item.items["LeatherGloves"]);
+        }
+        if (rep == "equip leatherpants") {
+            module_player.Equip(module_item.items["LeatherPants"]);
+        }
+        if (rep == "equip leatherhelmet") {
+            module_player.Equip(module_item.items["LeatherHelmet"]);
+        }
+        if (rep == "equip leatherchest") {
+            module_player.Equip(module_item.items["LeatherChest"]);
+        }
+
+        ///////////////////////////////////////////////////////
 
         if (rep == "quit") {
             process.exit();

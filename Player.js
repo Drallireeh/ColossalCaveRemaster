@@ -14,9 +14,10 @@ const player_stats = {
     Armor: 12,
     MaxHealth: 100,
     Health: 100,
-    InventoryCapacity: UpdateInventoryCapacity,
     InventoryWeight: 0
 }
+
+let inventory_capacity = player_stats.Strength * 7.5;
 
 let player_inventory = [];
 let player_equipment = {
@@ -32,13 +33,14 @@ let player_equipment = {
 
 function UpdateInventoryCapacity()
 {
-    player_stats.InventoryCapacity = player_stats.Strength * 7.5;
+    inventory_capacity = player_stats.Strength * 7.5;
 }
 
 function Take(object) {
-    if (player_stats.InventoryWeight + object.Weight <= player_stats.InventoryCapacity) {
+    if (player_stats.InventoryWeight + object.Weight <= inventory_capacity) {
         player_inventory.push(object);
         player_stats.InventoryWeight += object.Weight;
+        console.log("Vous avez ramasser " + object.Name);
     }
     else console.log("Action impossible, cet objet est trop lourd");
 }
@@ -54,6 +56,7 @@ function ListEquipment() {
 function Throw(object) {
     if (player_inventory.indexOf(object) != -1) {
         player_inventory.splice(player_inventory.indexOf(object), 1);
+        player_stats.Weight -= object.Weight;
         console.log("Vous jetez " + object.Name + "dans la nature. Pollueur.");
     }
     else console.log("Halte Maraud ! Tu ne peux jeter quelque chose que tu ne possède pas !");
@@ -73,6 +76,7 @@ function Equip(object) {
             player_equipment[object.Type] = object;
             object.Effect(player_stats, true);
             player_inventory.splice(player_inventory.indexOf(object), 1);
+            console.log("Vous avez équipé " + object.Name);
         }
         else console.log("Il y a déjà quelque chose d'équiper sur ce slot, veuillez le déséquiper avant.");
     }
@@ -112,18 +116,12 @@ function Attack(attacker, target, counter_func) {
         if (target.IsNpc === true) console.log("Vous avez tuer " + target.Name + ", en mourrant il a laissé tomber " + target.Item);
         else {
             console.log("Game Over. Vous êtes mort. (et nul, mais chut, cela restera entre nous..)");
+            process.exit();
         }
     }
 
     counter_func();
 }
 
-function Test() {
-    Take(item_module.items[Object.keys(item_module.items)[7]]);
-
-    console.log(player_stats)
-
-    Equip(item_module.items[Object.keys(item_module.items)[7]]);
-}
-
-Test();
+exports.Take = Take;
+exports.Equip = Equip;
