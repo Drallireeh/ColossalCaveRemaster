@@ -169,6 +169,11 @@ process.stdin.on('data', (d) => {
 
         ///////////////////////////////////////////////////////
 
+        if (rep == "use healthpotion")
+        {
+            module_player.Use(module_item.items["HealthPotion"]);
+        }
+
         if (rep == "quit") {
             process.exit();
         }

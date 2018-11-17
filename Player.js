@@ -64,7 +64,7 @@ function Throw(object) {
 
 function Use(object) {
     if (player_inventory.indexOf(object) != -1 || player_equipment.hasOwnProperty(object.Type)) {
-        if (object.Effect != undefined) object.Effect();
+        if (object.Effect != undefined) object.Effect(player_stats);
         else console.log("Cet objet n'a aucun effet");
     }
     else ("Tss Tss Tss. Tu ne possède pas l'objet demandé");
@@ -92,7 +92,7 @@ function Unequip(object) {
     else console.log("Tu ne peux pas déséquiper " + object.Name + ", il n'est pas équipé sur toi.");
 }
 
-function Attack(attacker, target, counter_func) {
+function Attack(attacker, target, CounterFunc) {
     let dice_result = dice_module.DicesRoll(20);
 
     let attacker_attack = dice_result[0] + attacker.Strength;
@@ -124,13 +124,11 @@ function Attack(attacker, target, counter_func) {
             console.log("Game Over. Vous êtes mort. (et nul, mais chut, cela restera entre nous..)");
             process.exit();
         }
-
     }
-
-    counter_func();
+    CounterFunc();
 }
 
 exports.Take = Take;
+exports.Use = Use;
 exports.Equip = Equip;
 exports.Attack = Attack;
-exports.player = player_stats;
