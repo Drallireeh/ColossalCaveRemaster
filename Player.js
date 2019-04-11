@@ -132,3 +132,4 @@ exports.Take = Take;
 exports.Use = Use;
 exports.Equip = Equip;
 exports.Attack = Attack;
+exports.player = player_stats;

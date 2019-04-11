@@ -181,7 +181,7 @@ process.stdin.on('data', (d) => {
     else if (module_map.game_mode == "fight") {
         if (rep == "attack") {
             module_player.Attack(module_player.player, module_map.monster, () => {
-                module_player.Attack(module_map.monster, module_player.player, () => { });
+                module_player.Attack(module_map.monster, module_player.player, () => {});
             });
         }
         else {
