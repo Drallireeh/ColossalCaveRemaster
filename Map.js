@@ -187,7 +187,7 @@ function DescDest() {
             break;
         case "CG":
             monster = monster_module.monsters["Guard"];
-            ttext_info += text["Castle"] + text["Guard"];;
+            text_info += text["Castle"] + text["Guard"];;
             break;
         case "CA":
             monster = monster_module.monsters["LivingArmor"];
